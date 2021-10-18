@@ -60,12 +60,12 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
         return false; // image would be to small to scan
 
     std::vector<uint8_t> tmpData;
-    const uint8_t blackPixelR = 0xEA;
-    const uint8_t blackPixelG = 0x0A;
-    const uint8_t blackPixelB = 0x2A;
-    const uint8_t whitePixelR = 0xB4;
-    const uint8_t whitePixelG = 0xDA;
-    const uint8_t whitePixelB = 0xD2;
+    const uint8_t blackPixelR = 0x00;
+    const uint8_t blackPixelG = 0x00;
+    const uint8_t blackPixelB = 0x00;
+    const uint8_t whitePixelR = 0xEA;
+    const uint8_t whitePixelG = 0x0A;
+    const uint8_t whitePixelB = 0x2A;
 
     /* The below loop converts the qrData to RGB8.8.8 pixels and writes it with
      * the tinyPNGoutput library. since we probably have requested a larger
