@@ -60,8 +60,12 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
         return false; // image would be to small to scan
 
     std::vector<uint8_t> tmpData;
-    const uint8_t blackPixel = 0x00;
-    const uint8_t whitePixel = 0xFF;
+    const uint8_t blackPixelR = 0xEA;
+    const uint8_t blackPixelG = 0x0A;
+    const uint8_t blackPixelB = 0x2A;
+    const uint8_t whitePixelR = 0xB4;
+    const uint8_t whitePixelG = 0xDA;
+    const uint8_t whitePixelB = 0xD2;
 
     /* The below loop converts the qrData to RGB8.8.8 pixels and writes it with
      * the tinyPNGoutput library. since we probably have requested a larger
@@ -71,7 +75,7 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
     // border above
     for (int i = 0; i < pngWH; i++) // row
         for (int j = 0; j < pixelsWHPerModule; j++) // module pixel (height)
-            tmpData.insert(tmpData.end(), {whitePixel, whitePixel, whitePixel});
+            tmpData.insert(tmpData.end(), { whitePixelR, whitePixelG, whitePixelB });
 
     pngout.write(tmpData.data(), static_cast<size_t>(tmpData.size() / 3));
     tmpData.clear();
@@ -80,22 +84,22 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
         for (int col = 0; col < pixelsWHPerModule; col++) {
             // border left
             for (int i = 0; i < qrSizeFitsInMaxImgSizeTimes; ++i)
-                tmpData.insert(tmpData.end(), {whitePixel, whitePixel, whitePixel});
+                tmpData.insert(tmpData.end(), { whitePixelR, whitePixelG, whitePixelB });
 
             // qr module to pixel
             for (int qrModuleAtX = 0; qrModuleAtX < (qrSize); qrModuleAtX++) {
             for (int row = 0; row < qrSizeFitsInMaxImgSizeTimes; ++row) {
                     if (qrData.getModule(qrModuleAtX, qrModuleAtY)) {
                         // insert saves us a for loop or 3 times the same line.
-                        tmpData.insert(tmpData.end(), {blackPixel, blackPixel, blackPixel});
+                        tmpData.insert(tmpData.end(), { blackPixelR, blackPixelG, blackPixelB });
                     } else {
-                        tmpData.insert(tmpData.end(), {whitePixel, whitePixel, whitePixel});
+                        tmpData.insert(tmpData.end(), { whitePixelR, whitePixelG, whitePixelB });
                     }
                 }
             }
             // border right
             for (int i = 0; i < qrSizeFitsInMaxImgSizeTimes; ++i)
-                tmpData.insert(tmpData.end(), {whitePixel, whitePixel, whitePixel});
+                tmpData.insert(tmpData.end(), { whitePixelR, whitePixelG, whitePixelB });
 
             // write the entire  row
             pngout.write(tmpData.data(), static_cast<size_t>(tmpData.size() / 3));
@@ -106,7 +110,7 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
     // border below
     for (int i = 0; i < pngWH; i++) // row
         for (int j = 0; j < pixelsWHPerModule; j++) // module pixel (height)
-            tmpData.insert(tmpData.end(), {whitePixel, whitePixel, whitePixel});
+            tmpData.insert(tmpData.end(), { whitePixelR, whitePixelG, whitePixelB });
 
     pngout.write(tmpData.data(), static_cast<size_t>(tmpData.size() / 3));
     tmpData.clear();
