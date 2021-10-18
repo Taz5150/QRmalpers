@@ -17,8 +17,8 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
-#include "libs/QR-Code-generator/QrCode.hpp"
-#include "libs/tinypngout/TinyPngOut.hpp"
+#include "../libs/QR-Code-generator/QrCode.hpp"
+#include "../libs/tinypngout/TinyPngOut.hpp"
 #include <fstream>
 #include <iostream>
 #include <memory>
