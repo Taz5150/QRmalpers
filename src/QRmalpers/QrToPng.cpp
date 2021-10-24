@@ -10,13 +10,13 @@ QrToPng::QrToPng(std::string fileName, int imgSize, int minModulePixelSize, std:
         _overwriteExistingFile(overwriteExistingFile), _ecc(ecc) {
 }
 
-bool QrToPng::writeToPNG() {
+bool QrToPng::writeToPNG(int bn) {
     /* text is required */
     if (_text.empty())
         return false;
 
 
-    if (!_overwriteExistingFile and fs::exists(_fileName))
+    if (!_overwriteExistingFile && fs::exists(_fileName))
         return false;
 
     auto _qr = qrcodegen::QrCode::encodeText("", _ecc);
@@ -30,11 +30,11 @@ bool QrToPng::writeToPNG() {
         return false;
     }
 
-    if (_overwriteExistingFile and fs::exists(_fileName))
+    if (_overwriteExistingFile && fs::exists(_fileName))
         if (!fs::copy_file(_fileName, _fileName + ".tmp", fs::copy_options::overwrite_existing))
             return false;
 
-    auto result = _writeToPNG(_qr);
+    auto result = _writeToPNG(_qr, bn);
 
     if (result)
         fs::remove(_fileName + ".tmp");
@@ -43,7 +43,7 @@ bool QrToPng::writeToPNG() {
 
 }
 
-bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
+bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData, int bn) const {
     std::ofstream out(_fileName.c_str(), std::ios::binary);
     int pngWH = _imgSizeWithBorder(qrData);
     TinyPngOut pngout(pngWH, pngWH, out);
@@ -60,12 +60,20 @@ bool QrToPng::_writeToPNG(const qrcodegen::QrCode &qrData) const {
         return false; // image would be to small to scan
 
     std::vector<uint8_t> tmpData;
-    const uint8_t blackPixelR = 0x00;
-    const uint8_t blackPixelG = 0x00;
-    const uint8_t blackPixelB = 0x00;
-    const uint8_t whitePixelR = 0xEA;
-    const uint8_t whitePixelG = 0x0A;
-    const uint8_t whitePixelB = 0x2A;
+    uint8_t blackPixelR = 0x1C;
+    uint8_t blackPixelG = 0x25;
+    uint8_t blackPixelB = 0x2C;
+    uint8_t whitePixelR = 0x5B;
+    uint8_t whitePixelG = 0xB1;
+    uint8_t whitePixelB = 0xBC;
+    if (bn == 1) {
+        blackPixelR = 0x1C;
+        blackPixelG = 0x25;
+        blackPixelB = 0x2C;
+        whitePixelR = 0xFF;
+        whitePixelG = 0xFF;
+        whitePixelB = 0xFF;
+    }
 
     /* The below loop converts the qrData to RGB8.8.8 pixels and writes it with
      * the tinyPNGoutput library. since we probably have requested a larger

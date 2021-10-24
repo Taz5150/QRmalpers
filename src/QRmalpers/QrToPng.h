@@ -17,8 +17,8 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
-#include "../libs/QR-Code-generator/QrCode.hpp"
-#include "../libs/tinypngout/TinyPngOut.hpp"
+#include "../../lib/QR-Code-generator/QrCode.hpp"
+#include "../../lib/tinypngout/TinyPngOut.hpp"
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -43,7 +43,7 @@ public:
 
     /** Writes a QrToPng object to a png file at @_fileName.
      * @return true if file could be written, false if file could not be written */
-    bool writeToPNG();
+    bool writeToPNG(int bn);
 
 private:
     std::string _fileName;
@@ -58,7 +58,7 @@ private:
      * format is geared towards the tinypngoutput library.
      * @param qrData the code returned by the qrcodegen library
      * @return true if file could be written, false if file could not be written */
-    [[nodiscard]] bool _writeToPNG(const qrcodegen::QrCode &qrData) const;
+    [[nodiscard]] bool _writeToPNG(const qrcodegen::QrCode &qrData, int bn) const;
 
     /* returns the width/height of the image based on the max image size
     * and qr width. Ex. If the max img size is 90, the qr code size 29
